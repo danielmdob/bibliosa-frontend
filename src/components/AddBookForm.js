@@ -40,7 +40,7 @@ const AddBookForm = (props) => {
     return (
         <Grid>
             <Row>
-                <Col md={8}>
+                <Col sm={8}>
                     <Row>
                         <Col xs={12}>
                             <h3 className="page-title">Agregar Libro</h3>
@@ -155,32 +155,35 @@ const AddBookForm = (props) => {
                         </FormGroup>
 
                         <FormGroup>
-                            <Col sm={11}>
+                            <Col sm={10}>
                             </Col>
-                            <Col sm={1}>
+                            <Col sm={2}>
                                 <Button bsStyle="primary" type="submit" disabled={!props.parentState.buttonIsEnabled}>Guardar</Button>
                             </Col>
                         </FormGroup>
                     </Form>
                 </Col>
-                <Col md={4}>
-                    <div className="cover-area">
-                        <h4 className="cover-title">Portada</h4>
-                        <div className="cover">
-                            {renderImage(props)}
+                <Col sm={4} className="hidden-xs">
+                    <Row>
+                        <div className="cover-area">
+                            <h4 className="cover-title">Portada</h4>
+                            <div className="cover">
+                                {renderImage(props)}
+                            </div>
+                            <Form className="url-form" horizontal>
+                                <FormGroup>
+                                    <Col componentClass={ControlLabel} sm={3}>
+                                        URL
+                                    </Col>
+                                    <Col sm={9}>
+                                        <FormControl placeholder="URL"
+                                                     onChange={urlInput => props.handleBookCoverUrlChange(urlInput)} />
+                                    </Col>
+                                </FormGroup>
+                            </Form>
                         </div>
-                        <Form className="url-form" horizontal>
-                            <FormGroup>
-                                <Col componentClass={ControlLabel} sm={3}>
-                                    URL
-                                </Col>
-                                <Col sm={9}>
-                                    <FormControl placeholder="URL"
-                                                 onChange={urlInput => props.handleBookCoverUrlChange(urlInput)} />
-                                </Col>
-                            </FormGroup>
-                        </Form>
-                    </div>
+                    </Row>
+                    {props.renderStatusAlert()}
                 </Col>
             </Row>
         </Grid>

@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 
 import '../assets/css/ManualAdd.css';
 import CategoryService from '../services/category_service';
@@ -7,8 +7,15 @@ import BookService from '../services/book_service';
 import {convISBN10toISBN13, convISBN13toISBN10} from "../utils/IsbnUtils";
 import {DEFAULT_BOOK_COVER_URL, NUMBERS_REGEX, WRITING_ISBN_10_REGEX, WRITING_ISBN_13_REGEX} from "../constants";
 import {checkImage} from "../utils/ImageUtils";
+import {Alert, Button, Row} from "react-bootstrap";
+
+import {Link, Redirect} from 'react-router-dom'
 
 class AddBookComponent extends Component {
+    success = 'SUCCESS';
+    isbn10Error = 'ISBN10_ERROR';
+    isbn13Error = 'ISBN13_ERROR';
+    callNumberError = 'CALL_NUMBER_ERROR';
 
     constructor(props) {
         super(props);
@@ -21,13 +28,15 @@ class AddBookComponent extends Component {
             isbn13: '',
             issn: '',
             callNumber: '',
+            edition: '',
             publisher: '',
-            publisher: '',
-            year: '',
+            year: null,
             copies: 1,
             bookCoverUrl: DEFAULT_BOOK_COVER_URL,
             buttonIsEnabled: false,
             authors: [],
+            addStatus: '',
+            conflictingBook: null,
         };
         this.loadCategories();
     }
@@ -52,7 +61,6 @@ class AddBookComponent extends Component {
     onCategorySelect(category) {
         let newState = Object.assign({}, this.state);
         newState.selectedCategory = category;
-        this.checkButtonState(newState);
         this.setState(newState);
     }
 
@@ -156,8 +164,79 @@ class AddBookComponent extends Component {
         for (let author of this.state.authors) {
             authorNames.push(author.label);
         }
-        BookService.addBook(authorNames)
-            .then(() => alert("Success"));
+
+        let newState = Object.assign({}, this.state);
+
+        let categoryId;
+        this.state.selectedCategory != null ? categoryId = this.state.selectedCategory.id : categoryId = null;
+
+        BookService.addBook(categoryId, this.state.title, authorNames, this.state.isbn10,
+            this.state.isbn13, this.state.issn, this.state.callNumber, this.state.publisher, this.state.edition,
+            this.state.year, this.state.copies, this.state.bookCoverUrl)
+            .then(() => {
+                newState.addStatus = this.success;
+                this.setState(newState);
+            })
+            .catch((error) => {
+                switch (error.response.data.conflicting_field) {
+                    case "isbn10":
+                        newState.addStatus = this.isbn10Error;
+                        break;
+
+                    case "isbn13":
+                        newState.addStatus = this.isbn13Error;
+                        break;
+
+                    case "call_number":
+                        newState.addStatus = this.callNumberError;
+                        break;
+
+                    default:
+                }
+                newState.conflictingBook = error.response.data;
+            })
+            .then(() => this.setState(newState));
+    }
+
+    handleDismiss() {
+        let newState = Object.assign({}, this.state);
+        newState.addStatus = '';
+        this.setState(newState);
+    }
+
+    renderStatusAlert() {
+        let conflictingCode;
+
+        switch (this.state.addStatus) {
+            case this.success:
+                return (<Redirect to="/books" />);
+
+            case this.isbn10Error:
+                conflictingCode = 'ISBN';
+                break;
+
+            case this.isbn13Error:
+                conflictingCode = 'ISBN13';
+                break;
+
+            case this.callNumberError:
+                conflictingCode = "de categorización";
+                break;
+
+            default:
+        }
+
+        if (this.state.addStatus !== '') {
+            return (
+                <Row>
+                    <Alert bsStyle='warning'>
+                        El código {conflictingCode} ingresado ya corresponde al libro <Link to={'books/'+this.state.conflictingBook.id}>{this.state.conflictingBook.title}</Link>
+                        <p><Button onClick={() => this.handleDismiss()}>Ok</Button></p>
+                    </Alert>
+                </Row>
+
+            );
+        }
     }
 
 }

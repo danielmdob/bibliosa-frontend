@@ -22,6 +22,7 @@ class ManualAdd extends AddBookComponent {
                          handleBookCoverUrlChange={(urlInput) => this.handleBookCoverUrlChange(urlInput)}
                          handleAuthorsChange={(selected) => this.handleAuthorsChange(selected)}
                          handleSubmit={(form) => this.handleSubmit(form)}
+                         renderStatusAlert={() => this.renderStatusAlert()}
                          onCategorySelect={(category) => this.onCategorySelect(category)}/>
         );
     }

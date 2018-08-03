@@ -11,8 +11,9 @@ import Books from "./components/Books";
 import Error from "./components/Error";
 import Navigation from "./components/Navigation";
 import AddAdministrator from "./components/AddAdministrator";
-import ManualAdd from "./components/ManualAdd"
-import Categories from "./components/Categories"
+import ManualAdd from "./components/ManualAdd";
+import Categories from "./components/Categories";
+import BookInfo from "./components/BookInfo";
 
 class App extends Component {
     render() {
@@ -28,7 +29,8 @@ class App extends Component {
                     <Switch>
                         <Route path="/" component={Home} exact />
                         <Route path="/loans" component={Loans} />
-                        <Route path="/books" component={Books} />
+                        <Route path="/books" component={Books} exact />
+                        <Route path="/books/:bookId" component={BookInfo} exact />
                         <Route path="/add-administrator" component={AddAdministrator} />
                         <Route path="/manual-add" component={ManualAdd} />
                         <Route path="/categories" component={Categories} />

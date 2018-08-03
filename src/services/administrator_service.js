@@ -5,8 +5,7 @@ class _AdministratorService {
     inviteAdminUrl = BASE_URL + 'invite_administrator';
 
     inviteAdministrator(inviteeEmail) {
-        let data = new FormData();
-        data.append('invitee_email', inviteeEmail);
+        const data = `invitee_email=${inviteeEmail}`;
         return axios.post(this.inviteAdminUrl,
             data,
             { 'headers': { 'Content-Type': 'application/x-www-form-urlencoded' }, withCredentials: true })

@@ -14,8 +14,7 @@ class _CategoryService {
     }
 
     createCategory(name) {
-        let data = new FormData();
-        data.append('name', name);
+        const data = `name=${name}`;
         return axios.post(this.createCategoryUrl,
             data,
             { 'headers': { 'Content-Type': 'application/x-www-form-urlencoded' }, withCredentials: true })
@@ -23,9 +22,7 @@ class _CategoryService {
     }
 
     deleteCategory(categoryId) {
-        alert(categoryId);
-        let data = new FormData();
-        data.append('id', categoryId);
+        const data = `id=${categoryId}`;
         return axios.post(this.deleteCategoryUrl,
             data,
             { 'headers': { 'Content-Type': 'application/x-www-form-urlencoded' }, withCredentials: true })
@@ -33,9 +30,7 @@ class _CategoryService {
     }
 
     editCategory(categoryId, newName) {
-        let data = new FormData();
-        data.append('id', categoryId);
-        data.append('name', newName);
+        const data = `id=${categoryId}&name=${newName}`;
         return axios.post(this.editCategoryUrl,
             data,
             { 'headers': { 'Content-Type': 'application/x-www-form-urlencoded' }, withCredentials: true })
