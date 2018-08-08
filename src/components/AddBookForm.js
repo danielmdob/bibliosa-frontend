@@ -23,7 +23,9 @@ const renderAuthorsInput = (props) => {
                     options={[]}
                     onChange={(selected) => props.handleAuthorsChange(selected)}
                     emptyLabel=""
-                    placeholder="Ingrese los nombres de los autores..." />
+                    placeholder="Ingrese los nombres de los autores..."
+                    selected={props.parentState.authors}
+                />
             </Col>
         </FormGroup>
     );
@@ -43,7 +45,7 @@ const AddBookForm = (props) => {
                 <Col sm={8}>
                     <Row>
                         <Col xs={12}>
-                            <h3 className="page-title">Agregar Libro</h3>
+                            <h3 className="page-title">{props.title}</h3>
                         </Col>
                     </Row>
                     <Form horizontal className="add-book-form" onSubmit={(form) => props.handleSubmit(form)}>
@@ -158,7 +160,7 @@ const AddBookForm = (props) => {
                             <Col sm={10}>
                             </Col>
                             <Col sm={2}>
-                                <Button bsStyle="primary" type="submit" disabled={!props.parentState.buttonIsEnabled}>Guardar</Button>
+                                <Button bsStyle="primary" type="submit" disabled={props.parentState.title.trim().length === 0}>Guardar</Button>
                             </Col>
                         </FormGroup>
                     </Form>
@@ -167,7 +169,7 @@ const AddBookForm = (props) => {
                     <Row>
                         <div className="cover-area">
                             <h4 className="cover-title">Portada</h4>
-                            <div className="cover">
+                            <div className="text-center">
                                 {renderImage(props)}
                             </div>
                             <Form className="url-form" horizontal>

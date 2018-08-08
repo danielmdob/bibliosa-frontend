@@ -1,12 +1,14 @@
 import React, {Component} from 'react'
-import {Grid, Row, Col, Panel, Table} from 'react-bootstrap';
+import {Grid, Row, Col, Panel, Table, Button} from 'react-bootstrap';
 import { checkImage } from "../utils/ImageUtils";
 
 import BookService from '../services/book_service';
+import AuthenticateService from '../services/authenticate_service';
 
 import {DEFAULT_BOOK_COVER_URL} from "../constants";
 
 import '../assets/css/BookInfo.css';
+import {LinkContainer} from "react-router-bootstrap/lib/ReactRouterBootstrap";
 
 class BookInfo extends Component {
 
@@ -16,9 +18,22 @@ class BookInfo extends Component {
         this.state = {
             book: null,
             bookCoverUrl: '',
+            isAdministrator: false,
         };
 
+        this.checkIfAdmin();
         this.loadBook();
+    }
+
+    checkIfAdmin() {
+        AuthenticateService.isAdministrator()
+            .then(response => {
+                if (response !== this.state.isAdministrator) {
+                    let newState = Object.assign({}, this.state);
+                    newState.isAdministrator = response;
+                    this.setState(newState);
+                }
+            })
     }
 
     loadBook() {
@@ -32,15 +47,16 @@ class BookInfo extends Component {
 
     renderAuthors() {
         if (this.state.book.authors != null && this.state.book.authors.length > 0) {
+            let authors = this.state.book.authors.slice();
             let content = [];
             content.push(
                 <tr key={0}>
-                    <th rowSpan={this.state.book.authors.length}>Autores</th>
-                    <td>{this.state.book.authors.shift().full_name}</td>
+                    <th rowSpan={authors.length}>Autores</th>
+                    <td>{authors.shift().full_name}</td>
                 </tr>
             );
             let key = 1;
-            for (let author of this.state.book.authors) {
+            for (let author of authors) {
                 content.push(<tr key={key}><td>{author.full_name}</td></tr>);
                 key++;
             }
@@ -58,13 +74,23 @@ class BookInfo extends Component {
         checkImage(this.state.bookCoverUrl,
             null, // don't do anything if the image is valid
             () => {
-            let newState = Object.assign({}, this.state);
-            newState.bookCoverUrl = DEFAULT_BOOK_COVER_URL;
-            this.setState(newState);
+                let newState = Object.assign({}, this.state);
+                newState.bookCoverUrl = DEFAULT_BOOK_COVER_URL;
+                this.setState(newState);
             });
         return (
-            <img src={this.state.bookCoverUrl} alt="Sin portada" className="cover" />
+            <img src={this.state.bookCoverUrl} alt="Sin portada" className="book-info-cover" />
         )
+    }
+
+    renderAdminButtons() {
+        if (this.state.isAdministrator) {
+            return(
+                <LinkContainer to={"/books/" + this.props.match.params.bookId + "/edit"} >
+                    <Button>Editar información</Button>
+                </LinkContainer>
+            )
+        }
     }
 
     render() {
@@ -121,7 +147,12 @@ class BookInfo extends Component {
                                     </Table>
                                 </Col>
                                 <Col sm={3} xsHidden className="text-center">
-                                    {this.renderCover()}
+                                    <Row>
+                                        {this.renderCover()}
+                                    </Row>
+                                    <Row>
+                                        {this.renderAdminButtons()}
+                                    </Row>
                                 </Col>
                             </Panel.Body>
                         </Panel>

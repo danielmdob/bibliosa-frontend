@@ -18,6 +18,16 @@ class Navigation extends Component {
             isAdministrator: false,
             firstName: '',
         };
+        Promise.all([AuthenticateService.isAdministrator(), UserService.getUserInformation()])
+            .then(values => {
+                let tempState = {
+                    isAdministrator: values[0],
+                    firstName: values[1].firstName,
+                };
+                if (tempState.isAdministrator !== this.state.isAdministrator || tempState.firstName !== this.state.firstName) {
+                    this.setState(tempState);
+                }
+            });
     }
 
     renderAdminButtons() {
@@ -35,7 +45,9 @@ class Navigation extends Component {
                         </LinkContainer>
                     </NavDropdown>,
                     <NavDropdown key={1001} eventKey={5} title="Agregar Libro" id="basic-nav-dropdown">
-                        <MenuItem eventKey={5.1}>Agregado Inteligente</MenuItem>
+                        <LinkContainer to="/smart-add">
+                            <MenuItem eventKey={5.1}>Agregado Inteligente</MenuItem>
+                        </LinkContainer>
                         <MenuItem divider/>
                         <LinkContainer to="/manual-add">
                             <MenuItem eventKey={5.2}>Agregado Manual</MenuItem>
@@ -47,16 +59,7 @@ class Navigation extends Component {
     }
 
     render() {
-        Promise.all([AuthenticateService.isAdministrator(), UserService.getUserInformation()])
-            .then(values => {
-                let tempState = {
-                    isAdministrator: values[0],
-                    firstName: values[1].firstName,
-                };
-                if (tempState.isAdministrator !== this.state.isAdministrator || tempState.firstName !== this.state.firstName) {
-                    this.setState(tempState);
-                }
-            });
+
         return (
             <Navbar className="nav-bar" collapseOnSelect>
                 <Navbar.Header>

@@ -1,10 +1,10 @@
 import React from 'react';
 import AddBookForm from './AddBookForm';
-import AddBookComponent from './AddBookComponent';
+import SetBookComponent from './SetBookComponent';
 
 import '../assets/css/ManualAdd.css';
 
-class ManualAdd extends AddBookComponent {
+class ManualAdd extends SetBookComponent {
 
     renderAddBookForm() {
         let newState = Object.assign({}, this.state);
@@ -23,7 +23,9 @@ class ManualAdd extends AddBookComponent {
                          handleAuthorsChange={(selected) => this.handleAuthorsChange(selected)}
                          handleSubmit={(form) => this.handleSubmit(form)}
                          renderStatusAlert={() => this.renderStatusAlert()}
-                         onCategorySelect={(category) => this.onCategorySelect(category)}/>
+                         onCategorySelect={(category) => this.onCategorySelect(category)}
+                         title="Agregar libro"
+            />
         );
     }
 

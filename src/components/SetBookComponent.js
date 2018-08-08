@@ -11,7 +11,7 @@ import {Alert, Button, Row} from "react-bootstrap";
 
 import {Link, Redirect} from 'react-router-dom'
 
-class AddBookComponent extends Component {
+class SetBookComponent extends Component {
     success = 'SUCCESS';
     isbn10Error = 'ISBN10_ERROR';
     isbn13Error = 'ISBN13_ERROR';
@@ -20,6 +20,11 @@ class AddBookComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.initState();
+        this.loadCategories();
+    }
+
+    initState() {
         this.state = {
             categories: [],
             selectedCategory: null,
@@ -30,15 +35,13 @@ class AddBookComponent extends Component {
             callNumber: '',
             edition: '',
             publisher: '',
-            year: null,
+            year: '',
             copies: 1,
             bookCoverUrl: DEFAULT_BOOK_COVER_URL,
-            buttonIsEnabled: false,
             authors: [],
             addStatus: '',
             conflictingBook: null,
         };
-        this.loadCategories();
     }
 
     loadCategories() {
@@ -50,14 +53,6 @@ class AddBookComponent extends Component {
             }))
     }
 
-    checkButtonState(newState) {
-        if (newState.title.trim().length > 0) {
-            newState.buttonIsEnabled = true;
-        } else {
-            newState.buttonIsEnabled = false;
-        }
-    }
-
     onCategorySelect(category) {
         let newState = Object.assign({}, this.state);
         newState.selectedCategory = category;
@@ -67,7 +62,6 @@ class AddBookComponent extends Component {
     handleTitleChange(titleInput) {
         let newState = Object.assign({}, this.state);
         newState.title = titleInput.target.value;
-        this.checkButtonState(newState);
         this.setState(newState);
     }
 
@@ -162,7 +156,11 @@ class AddBookComponent extends Component {
         form.preventDefault(); // stops the page from reloading
         let authorNames = [];
         for (let author of this.state.authors) {
-            authorNames.push(author.label);
+            if (author.label == null) {
+                authorNames.push(author);
+            } else {
+                authorNames.push(author.label);
+            }
         }
 
         let newState = Object.assign({}, this.state);
@@ -175,7 +173,6 @@ class AddBookComponent extends Component {
             this.state.year, this.state.copies, this.state.bookCoverUrl)
             .then(() => {
                 newState.addStatus = this.success;
-                this.setState(newState);
             })
             .catch((error) => {
                 switch (error.response.data.conflicting_field) {
@@ -230,7 +227,7 @@ class AddBookComponent extends Component {
             return (
                 <Row>
                     <Alert bsStyle='warning'>
-                        El código {conflictingCode} ingresado ya corresponde al libro <Link to={'books/'+this.state.conflictingBook.id}>{this.state.conflictingBook.title}</Link>
+                        El código {conflictingCode} ingresado ya corresponde al libro <Link to={'/books/'+this.state.conflictingBook.id}>{this.state.conflictingBook.title}</Link>
                         <p><Button onClick={() => this.handleDismiss()}>Ok</Button></p>
                     </Alert>
                 </Row>
@@ -241,4 +238,4 @@ class AddBookComponent extends Component {
 
 }
 
-export default AddBookComponent;
+export default SetBookComponent;

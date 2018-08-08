@@ -1,4 +1,5 @@
 export const BASE_URL = 'http://localhost:8000/';
+export const ISBN_URL = 'https://www.googleapis.com/books/v1/volumes?q=isbn:';
 export const LIBRARY_NAME = 'BibliOsa';
 export const EMAIL_REGEX = new RegExp('^[a-z0-9](.?[a-z0-9]){5,}@g(oogle)?mail.com$');
 export const DEFAULT_BOOK_COVER_URL = 'https://d1uyjdd2vmpgct.cloudfront.net/public/defaults/default-book-cover.png';
