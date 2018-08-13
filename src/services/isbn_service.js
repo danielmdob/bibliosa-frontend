@@ -1,4 +1,4 @@
-import {BASE_URL, ISBN_URL} from '../constants';
+import {ISBN_URL} from '../constants';
 import axios from 'axios';
 
 class _IsbnService {
@@ -17,7 +17,7 @@ class _IsbnService {
     getBookInfo(isbn) {
         return axios.get(ISBN_URL + isbn)
             .then(firstResponse => {
-                if(firstResponse.data.totalItems = 0 || firstResponse.data.length > 1) {
+                if(firstResponse.data.totalItems === 0 || firstResponse.data.length > 1) {
                     return null;
                 }
 
@@ -39,7 +39,7 @@ class _IsbnService {
                         book.authors = bookInfo.volumeInfo.authors;
                         let year = bookInfo.volumeInfo.publishedDate.substr(0,4);
                         book.year = isNaN(year) ? null : year;
-                        isNaN(book.year) ? book.year = null : book.year;
+                        isNaN(book.year) ? book.year = null : book.year = book.year;
                         book.publisher = bookInfo.volumeInfo.publisher;
                         book.authors = bookInfo.volumeInfo.authors;
                         if (bookInfo.volumeInfo.imageLinks != null) {

@@ -1,0 +1,25 @@
+.books-book-title {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.books-book-cover-div {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding-top: 10px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.books-book-cover {
+    height: 207px;
+}
+
+.books-book-title:hover{
+    overflow: visible;
+    white-space: normal;
+    height:auto;  /* just added this line */
+}

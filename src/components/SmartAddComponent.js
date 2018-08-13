@@ -1,16 +1,13 @@
-import React, {Component} from 'react'
-import {Grid, Row, Col, Panel, Table, Button, FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
+import React from 'react'
+import {Grid, Row, Button, FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
 import AddBookForm from './AddBookForm';
 import SetBookComponent from './SetBookComponent';
-
-import { checkImage } from "../utils/ImageUtils";
 
 import IsbnService from '../services/isbn_service';
 
 import {DEFAULT_BOOK_COVER_URL} from "../constants";
 
 import '../assets/css/BookInfo.css';
-import {LinkContainer} from "react-router-bootstrap/lib/ReactRouterBootstrap";
 
 class SmartAddComponent extends SetBookComponent {
 

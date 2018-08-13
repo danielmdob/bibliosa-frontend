@@ -8,6 +8,7 @@ import '../assets/css/ManualAdd.css';
 import {DEFAULT_BOOK_COVER_URL} from "../constants";
 import {Alert, Button, Row} from "react-bootstrap";
 import {Link, Redirect} from "react-router-dom";
+import {checkImage} from "../utils/ImageUtils";
 
 class EditBookComponent extends SetBookComponent {
 
@@ -43,6 +44,13 @@ class EditBookComponent extends SetBookComponent {
                 newState.authors = this.getAuthorsNames(response.authors);
                 response.cover !== null ? newState.bookCoverUrl = response.cover : newState.bookCoverUrl = DEFAULT_BOOK_COVER_URL;
                 this.setState(newState);
+            })
+            .then(() =>{
+                checkImage(this.state.bookCoverUrl, null, () => {
+                    let newState = Object.assign({}, this.state);
+                    newState.bookCoverUrl = DEFAULT_BOOK_COVER_URL;
+                    this.setState(newState);
+                });
             })
     }
 

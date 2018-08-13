@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Grid, Row, Col, Panel, Table, Button} from 'react-bootstrap';
+import {Grid, Row, Col, Panel, Table, Button, Modal} from 'react-bootstrap';
 import { checkImage } from "../utils/ImageUtils";
 
 import BookService from '../services/book_service';
@@ -9,8 +9,9 @@ import {DEFAULT_BOOK_COVER_URL} from "../constants";
 
 import '../assets/css/BookInfo.css';
 import {LinkContainer} from "react-router-bootstrap/lib/ReactRouterBootstrap";
+import {Link, Redirect} from "react-router-dom";
 
-class BookInfo extends Component {
+class BookInfoComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -19,6 +20,8 @@ class BookInfo extends Component {
             book: null,
             bookCoverUrl: '',
             isAdministrator: false,
+            showDeleteModal: false,
+            redirectToBooks: false,
         };
 
         this.checkIfAdmin();
@@ -45,19 +48,38 @@ class BookInfo extends Component {
         });
     }
 
+    handleDeleteClick() {
+        let newState = Object.assign({}, this.state);
+        newState.showDeleteModal = true;
+        this.setState(newState);
+    }
+
+    handleDeleteConfirm() {
+        BookService.deleteBook(this.state.book.id).then(() => {
+            let newState = Object.assign({}, this.state);
+            newState.redirectToBooks = true;
+            this.setState(newState);
+        });
+    }
+
+    handleModalClose() {
+        this.state.showDeleteModal = false;
+    }
+
     renderAuthors() {
         if (this.state.book.authors != null && this.state.book.authors.length > 0) {
             let authors = this.state.book.authors.slice();
+            let firstAuthor = authors.shift();
             let content = [];
             content.push(
                 <tr key={0}>
-                    <th rowSpan={authors.length}>Autores</th>
-                    <td>{authors.shift().full_name}</td>
+                    <th rowSpan={authors.length + 1}>Autores</th>
+                    <td><Link to={"/author/" +  firstAuthor.id}>{firstAuthor.full_name}</Link></td>
                 </tr>
             );
             let key = 1;
             for (let author of authors) {
-                content.push(<tr key={key}><td>{author.full_name}</td></tr>);
+                content.push(<tr key={key}><td><Link to={"/author/" +  author.id}>{author.full_name}</Link></td></tr>);
                 key++;
             }
             return content;
@@ -86,17 +108,58 @@ class BookInfo extends Component {
     renderAdminButtons() {
         if (this.state.isAdministrator) {
             return(
-                <LinkContainer to={"/books/" + this.props.match.params.bookId + "/edit"} >
-                    <Button>Editar información</Button>
-                </LinkContainer>
+                <div>
+                    <Row className="book-info-button">
+                        <LinkContainer to={"/books/" + this.props.match.params.bookId + "/edit"} >
+                            <Button>Editar información</Button>
+                        </LinkContainer>
+                    </Row>
+                    <Row className="book-info-button">
+                        <Button onClick={() => this.handleDeleteClick()}>Eliminar</Button>
+                    </Row>
+                </div>
             )
         }
+    }
+
+    renderDeleteModal() {
+        if (!this.state.showDeleteModal) {
+            return null;
+        }
+
+        return (
+            <Modal show={this.state.showDeleteModal} onHide={() => this.handleModalClose()}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirmar</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>¿Está seguro que quiere borrar el libro {this.state.book.title}?</p>
+                    <p>Esto también eliminará la información relacionada con los préstamos de este libro.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => this.handleModalClose()}>No</Button>
+                    <Button onClick={() => this.handleDeleteConfirm()} bsStyle="primary">Sí</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+
+    renderRedirect() {
+        if (!this.state.redirectToBooks) {
+            return null;
+        }
+
+        return (
+            <Redirect to="/books" />
+        );
     }
 
     render() {
         if (this.state.book !== null) {
             return (
                 <Grid>
+                    {this.renderRedirect()}
+                    {this.renderDeleteModal()}
                     <Row>
                         <Panel bsStyle="primary">
                             <Panel.Heading>
@@ -164,4 +227,4 @@ class BookInfo extends Component {
     }
 }
 
-export default BookInfo;
+export default BookInfoComponent;
