@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import BookService from "../services/book_service";
 
-import {Col, DropdownButton, FormGroup, Grid, InputGroup, MenuItem, Panel, Row, Thumbnail} from "react-bootstrap";
+import {Col, DropdownButton, FormGroup, Grid, InputGroup, MenuItem, Panel, Row} from "react-bootstrap";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {Redirect} from "react-router-dom";
 import AuthorService from "../services/author_service";
@@ -120,6 +120,7 @@ class Books extends Component {
                 options={this.state.searchOptions}
                 onChange={(selectedOption) => this.handleChange(selectedOption)}
                 useCache={false}
+                emptyLabel="No se obtuvieron resultados."
             />
         );
     }

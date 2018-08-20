@@ -17,16 +17,15 @@ class Navigation extends Component {
         this.state = {
             isAdministrator: false,
             firstName: '',
+            isSubscribed: false,
         };
         Promise.all([AuthenticateService.isAdministrator(), UserService.getUserInformation()])
             .then(values => {
-                let tempState = {
-                    isAdministrator: values[0],
-                    firstName: values[1].firstName,
-                };
-                if (tempState.isAdministrator !== this.state.isAdministrator || tempState.firstName !== this.state.firstName) {
-                    this.setState(tempState);
-                }
+                let newState = Object.assign({}, this.state);
+                newState.isAdministrator = values[0];
+                newState.firstName = values[1].firstName;
+                newState.isSubscribed = values[1].isSubscribed;
+                this.setState(newState);
             });
     }
 
@@ -40,6 +39,10 @@ class Navigation extends Component {
                         </NavItem>
                     </LinkContainer>,
                     <NavDropdown key={1000} eventKey={4} title="Usuarios" id="basic-nav-dropdown" className="link">
+                        <LinkContainer to="/subscribe-user">
+                            <MenuItem eventKey={4.1}>Inscribir Usuario</MenuItem>
+                        </LinkContainer>
+                        <MenuItem divider/>
                         <LinkContainer to="/add-administrator">
                             <MenuItem eventKey={4.1}>Agregar Administradores</MenuItem>
                         </LinkContainer>
@@ -56,6 +59,20 @@ class Navigation extends Component {
                 ]
             );
         }
+    }
+
+    renderSubscribedButtons() {
+        if (!this.state.isSubscribed) {
+            return null;
+        }
+
+        return (
+            <LinkContainer to="/loans">
+                <NavItem eventKey={2}>
+                    <span className="link">Préstamos</span>
+                </NavItem>
+            </LinkContainer>
+        );
     }
 
     render() {
@@ -75,11 +92,7 @@ class Navigation extends Component {
                                     <span className="link">Libros</span>
                                 </NavItem>
                             </LinkContainer>
-                            <LinkContainer to="/loans">
-                                <NavItem eventKey={2}>
-                                    <span className="link">Préstamos</span>
-                                </NavItem>
-                            </LinkContainer>
+                            {this.renderSubscribedButtons()}
                             {this.renderAdminButtons()}
                         </Nav>
                     </div>

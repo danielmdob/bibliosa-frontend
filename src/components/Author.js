@@ -11,7 +11,7 @@ import {
 
 import {Link} from "react-router-dom";
 
-class AuthorComponent extends Component {
+class Author extends Component {
 
     constructor(props) {
         super(props);
@@ -95,4 +95,4 @@ class AuthorComponent extends Component {
     }
 }
 
-export default AuthorComponent;
+export default Author;

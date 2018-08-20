@@ -11,7 +11,7 @@ import {Alert, Button, Row} from "react-bootstrap";
 
 import {Link, Redirect} from 'react-router-dom'
 
-class SetBookComponent extends Component {
+class SetBook extends Component {
     success = 'SUCCESS';
     isbn10Error = 'ISBN10_ERROR';
     isbn13Error = 'ISBN13_ERROR';
@@ -238,4 +238,4 @@ class SetBookComponent extends Component {
 
 }
 
-export default SetBookComponent;
+export default SetBook;

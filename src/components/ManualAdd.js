@@ -1,10 +1,10 @@
 import React from 'react';
 import AddBookForm from './AddBookForm';
-import SetBookComponent from './SetBookComponent';
+import SetBook from './SetBook';
 
 import '../assets/css/ManualAdd.css';
 
-class ManualAdd extends SetBookComponent {
+class ManualAdd extends SetBook {
 
     renderAddBookForm() {
         let newState = Object.assign({}, this.state);

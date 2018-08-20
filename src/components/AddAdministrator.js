@@ -3,6 +3,7 @@ import {Grid, Row, Col, Alert, Button, Form, FormControl, FormGroup, ControlLabe
 
 import {EMAIL_REGEX} from "../constants";
 import AdministratorService from '../services/administrator_service'
+import {Link} from "react-router-dom";
 
 class AddAdministrator extends Component {
     success = 'SUCCESS';
@@ -64,7 +65,9 @@ class AddAdministrator extends Component {
             text = 'Se ha agregado el nuevo administrador exitosamente!'
         } else if (this.state.invitationStatus === this.notFound) {
             style = 'danger';
-            text = 'No se encontró ningún usuario con ese correo';
+            text = (
+                <span>No se encontró ningún usuario con ese correo, se necesita <Link to="/subscribe-user">inscribir al usuario</Link> poder para agregarlo como administrador</span>
+            );
         } else if (this.state.invitationStatus === this.alreadyAnAdministrator) {
             style = 'warning';
             text = 'Ese usuario ya es un administrador';

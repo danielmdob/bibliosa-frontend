@@ -1,6 +1,6 @@
 import React from 'react';
 import AddBookForm from './AddBookForm';
-import SetBookComponent from './SetBookComponent';
+import SetBook from './SetBook';
 
 import BookService from '../services/book_service';
 
@@ -10,7 +10,7 @@ import {Alert, Button, Row} from "react-bootstrap";
 import {Link, Redirect} from "react-router-dom";
 import {checkImage} from "../utils/ImageUtils";
 
-class EditBookComponent extends SetBookComponent {
+class EditBook extends SetBook {
 
     constructor(props) {
         super(props);
@@ -164,4 +164,4 @@ class EditBookComponent extends SetBookComponent {
     }
 }
 
-export default EditBookComponent;
+export default EditBook;

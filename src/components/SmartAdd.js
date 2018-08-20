@@ -1,15 +1,16 @@
 import React from 'react'
-import {Grid, Row, Button, FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap';
+import {Grid, Row, Button, FormGroup, ControlLabel, FormControl, HelpBlock, Alert, Col} from 'react-bootstrap';
 import AddBookForm from './AddBookForm';
-import SetBookComponent from './SetBookComponent';
+import SetBook from './SetBook';
 
 import IsbnService from '../services/isbn_service';
 
 import {DEFAULT_BOOK_COVER_URL} from "../constants";
 
 import '../assets/css/BookInfo.css';
+import '../assets/css/SmartAdd.css';
 
-class SmartAddComponent extends SetBookComponent {
+class SmartAdd extends SetBook {
 
     starting = 'STARTING';
     bookNotFound = 'NOT_FOUND';
@@ -53,6 +54,7 @@ class SmartAddComponent extends SetBookComponent {
         newState.isbn13 = book.isbn13;
         newState.authors = book.authors;
         newState.bookCoverUrl = book.bookCoverUrl;
+        newState.bookCoverUrl = (book.bookCoverUrl == null) ? DEFAULT_BOOK_COVER_URL : book.bookCoverUrl;
         this.setState(newState);
     }
 
@@ -71,6 +73,29 @@ class SmartAddComponent extends SetBookComponent {
                     this.setState(newState);
                 }
             })
+    }
+
+    handleSmartAddAlertDismiss() {
+        let newState = Object.assign({}, this.state);
+        newState.smartAddStatus = this.starting;
+        this.setState(newState);
+    }
+
+    renderSmartAddStatusAlert() {
+        if (this.state.smartAddStatus !== this.bookNotFound) {
+            return null;
+        }
+
+        return (
+            <Row className="smart-add-alert">
+                <Col sm={6}>
+                    <Alert bsStyle="warning">
+                        No se encontró información de ningún libro con el ISBN suministrado
+                        <p><Button onClick={() => this.handleSmartAddAlertDismiss()}>Ok</Button></p>
+                    </Alert>
+                </Col>
+            </Row>
+        );
     }
 
     render() {
@@ -93,6 +118,7 @@ class SmartAddComponent extends SetBookComponent {
                             <Button bsStyle="primary" disabled={this.state.enteredIsbn.length === 0} type="submit">Confirmar</Button>
                         </form>
                     </Row>
+                    {this.renderSmartAddStatusAlert()}
                 </Grid>
             );
         } else {
@@ -120,4 +146,4 @@ class SmartAddComponent extends SetBookComponent {
     }
 }
 
-export default SmartAddComponent;
+export default SmartAdd;

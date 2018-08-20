@@ -13,10 +13,11 @@ import Navigation from "./components/Navigation";
 import AddAdministrator from "./components/AddAdministrator";
 import ManualAdd from "./components/ManualAdd";
 import Categories from "./components/Categories";
-import BookInfoComponent from "./components/BookInfoComponent";
-import EditBookComponent from "./components/EditBookComponent";
-import SmartAddComponent from "./components/SmartAddComponent";
-import AuthorComponent from "./components/AuthorComponent";
+import BookInfo from "./components/BookInfo";
+import EditBook from "./components/EditBook";
+import SmartAdd from "./components/SmartAdd";
+import Author from "./components/Author";
+import SubscribeUser from "./components/SubscribeUser";
 
 class App extends Component {
     render() {
@@ -33,13 +34,14 @@ class App extends Component {
                         <Route path="/" component={Home} exact />
                         <Route path="/loans" component={Loans} />
                         <Route path="/books" component={Books} exact />
-                        <Route path="/books/:bookId" component={BookInfoComponent} exact />
-                        <Route path="/books/:bookId/edit" component={EditBookComponent} exact />
+                        <Route path="/books/:bookId" component={BookInfo} exact />
+                        <Route path="/books/:bookId/edit" component={EditBook} exact />
                         <Route path="/add-administrator" component={AddAdministrator} />
                         <Route path="/manual-add" component={ManualAdd} />
-                        <Route path="/smart-add" component={SmartAddComponent} />
+                        <Route path="/smart-add" component={SmartAdd} />
                         <Route path="/categories" component={Categories} />
-                        <Route path="/author/:authorId" component={AuthorComponent} exact />
+                        <Route path="/author/:authorId" component={Author} exact />
+                        <Route path="/subscribe-user" component={SubscribeUser} />
                         <Route component={Error} />
                     </Switch>
                 </div>
