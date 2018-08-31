@@ -266,11 +266,12 @@ class BookInfo extends Component {
 
         let loanElements = [];
         var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        let key = 0;
         for (let loan of this.state.bookLoans) {
             let startDate = new Date(loan.loan_date);
             let endDate = new Date(loan.return_date);
             loanElements.push(
-                <tr>
+                <tr key={key}>
                     <td>
                         <Link to={"/users/" + loan.reader.id}>
                             {loan.reader.first_name + " " + loan.reader.last_name}
@@ -279,103 +280,110 @@ class BookInfo extends Component {
                     <td>{startDate.toLocaleDateString("es-CR", options)}</td>
                     <td>{endDate.toLocaleDateString("es-CR", options)}</td>
                 </tr>
-        )
+            )
+            key++;
         }
 
         return (
             <Panel bsStyle="primary">
                 <Panel.Heading>
-                    <Panel.Title componentClass="h3">Préstamos</Panel.Title>
+                    <Panel.Title componentClass="h3">Préstamos activos</Panel.Title>
                 </Panel.Heading>
                 <Panel.Body>
                     <Table hover>
+                        <thead>
                         <tr>
                             <th>Lector</th>
                             <th>Fecha de inicio</th>
                             <th>Fecha esperada de devolución</th>
                         </tr>
+                        </thead>
                         <tbody>
                         {loanElements}
                         </tbody>
                     </Table>
                 </Panel.Body>
             </Panel>
-        )
-        }
+        );
+    }
 
-        render() {
-            if (this.state.book !== null) {
+    render() {
+        if (this.state.book !== null) {
             return (
-            <Grid>
-            {this.renderRedirect()}
-            {this.renderDeleteModal()}
-            {this.renderLoanModal()}
-            <Row>
-            <Panel bsStyle="primary">
-            <Panel.Heading>
-            <Panel.Title componentClass="h3">Información del libro</Panel.Title>
-            </Panel.Heading>
-            <Panel.Body>
-            <Col sm={9}>
-            <Table striped hover>
-            <tbody>
-            <tr>
-            <th>Título</th>
-            <td>{this.state.book.title}</td>
-            </tr>
-            {this.renderAuthors()}
-            <tr>
-            <th>Categoría</th>
-            <td>{this.renderCategory()}</td>
-            </tr>
-            <tr>
-            <th>ISBN</th>
-            <td>{this.state.book.isbn10}</td>
-            </tr>
-            <tr>
-            <th>ISBN 13</th>
-            <td>{this.state.book.isbn13}</td>
-            </tr>
-            <tr>
-            <th>ISSN</th>
-            <td>{this.state.book.issn}</td>
-            </tr>
-            <tr>
-            <th>Número de categorización</th>
-            <td>{this.state.book.call_number}</td>
-            </tr>
-            <tr>
-            <th>Edición</th>
-            <td>{this.state.book.edition}</td>
-            </tr>
-            <tr>
-            <th>Año</th>
-            <td>{this.state.book.year}</td>
-            </tr>
-            <tr>
-            <th>Editorial</th>
-            <td>{this.state.book.publisher}</td>
-            </tr>
-            </tbody>
-            </Table>
-            </Col>
-            <Col sm={3} xsHidden className="text-center">
-            <Row>
-            {this.renderCover()}
-            </Row>
-            <Row>
-            {this.renderAdminButtons()}
-            </Row>
-            </Col>
-            </Panel.Body>
-            </Panel>
-            {this.renderLoans()}
-            </Row>
-            </Grid>
+                <Grid>
+                    {this.renderRedirect()}
+                    {this.renderDeleteModal()}
+                    {this.renderLoanModal()}
+                    <Row>
+                        <Panel bsStyle="primary">
+                            <Panel.Heading>
+                                <Panel.Title componentClass="h3">Información del libro</Panel.Title>
+                            </Panel.Heading>
+                            <Panel.Body>
+                                <Col sm={9}>
+                                    <Table striped hover>
+                                        <tbody>
+                                        <tr>
+                                            <th>Título</th>
+                                            <td>{this.state.book.title}</td>
+                                        </tr>
+                                        {this.renderAuthors()}
+                                        <tr>
+                                            <th>Categoría</th>
+                                            <td>{this.renderCategory()}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ISBN</th>
+                                            <td>{this.state.book.isbn10}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ISBN 13</th>
+                                            <td>{this.state.book.isbn13}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ISSN</th>
+                                            <td>{this.state.book.issn}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Número de categorización</th>
+                                            <td>{this.state.book.call_number}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Edición</th>
+                                            <td>{this.state.book.edition}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Año</th>
+                                            <td>{this.state.book.year}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Editorial</th>
+                                            <td>{this.state.book.publisher}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Copias</th>
+                                            <td>{this.state.book.copies}</td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                                <Col sm={3} xsHidden className="text-center">
+                                    <Row>
+                                        {this.renderCover()}
+                                    </Row>
+                                    <Row>
+                                        {this.renderAdminButtons()}
+                                    </Row>
+                                </Col>
+                            </Panel.Body>
+                        </Panel>
+                        {this.renderLoans()}
+                    </Row>
+                </Grid>
             );
         }
-            return null; // don't render anything if a book has not loaded
-        }
-        }
+        return null; // don't render anything if a book has not loaded
+    }
+}
 
-        export default BookInfo;
+export default BookInfo;

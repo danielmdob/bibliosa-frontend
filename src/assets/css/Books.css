@@ -15,11 +15,15 @@
 }
 
 .books-book-cover {
-    height: 207px;
+    max-width: 150px;
 }
 
 .books-book-title:hover{
     overflow: visible;
     white-space: normal;
     height:auto;  /* just added this line */
+}
+
+.books-cover-container {
+    height:207px;
 }

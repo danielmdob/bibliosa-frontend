@@ -19,7 +19,7 @@ class UserSearchTypeahead extends Component {
             typeaheadProps: {
                 options: [],
                 isLoading: false,
-            }
+            },
         };
     }
 
@@ -42,9 +42,27 @@ class UserSearchTypeahead extends Component {
                     this.setState(newState);
                 });
         } else if (this.state.dropdownProps.title === this.lastName) {
-
+            UserService.lastNameSearch(input)
+                .then(response => {
+                    let newState = Object.assign({}, this.state);
+                    newState.typeaheadProps.options = response;
+                    newState.typeaheadProps.isLoading = false;
+                    this.setState(newState);
+                });
         } else if (this.state.dropdownProps.title === this.cardNumber) {
+            UserService.cardNumberSearch(input)
+                .then(response => {
+                    let newState = Object.assign({}, this.state);
+                    newState.typeaheadProps.options = response;
+                    newState.typeaheadProps.isLoading = false;
+                    this.setState(newState);
+                });
+        }
+    }
 
+    handleEnter(input) {
+        if (input.key === 'Enter') {
+            this.handleSearch(input.target.value);
         }
     }
 
@@ -72,11 +90,22 @@ class UserSearchTypeahead extends Component {
                 <AsyncTypeahead
                     {...this.state.typeaheadProps}
                     onSearch={(input) => this.handleSearch(input)}
-                    labelKey={(option) => `${option.firstName} ${option.lastName}`}
+                    labelKey={(option) => `${option.firstName} ${option.lastName} ${option.cardNumber}`}
                     useCache={false}
                     emptyLabel="No se obtuvieron resultados."
-                    minLength={3}
+                    minLength={1}
                     onChange={(selectedOption) => this.props.handleUserSelect(selectedOption)}
+                    promptText="Escriba para buscar..."
+                    onKeyDown={(input) => this.handleEnter(input)}
+                    searchText={"Buscando..."}
+                    renderMenuItemChildren={(option) => (
+                        <div>
+                            {option.firstName + " " + option.lastName}
+                            <div>
+                                <small>Carnet: {option.cardNumber}</small>
+                            </div>
+                        </div>
+                    )}
                 />
             </InputGroup>
         );

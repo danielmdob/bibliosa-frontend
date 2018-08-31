@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 import AuthenticateService from './services/authenticate_service';
 
 import 'bootstrap3/dist/css/bootstrap.min.css';
 import './App.css'
 
-import Home from "./components/Home";
 import Loans from "./components/Loans";
 import Books from "./components/Books";
 import Error from "./components/Error";
@@ -18,6 +17,8 @@ import EditBook from "./components/EditBook";
 import SmartAdd from "./components/SmartAdd";
 import Author from "./components/Author";
 import SubscribeUser from "./components/SubscribeUser";
+import UserSearch from "./components/UserSearch";
+import UserInfo from "./components/UserInfo";
 
 class App extends Component {
     render() {
@@ -31,7 +32,7 @@ class App extends Component {
                 <div>
                     <Navigation />
                     <Switch>
-                        <Route path="/" component={Home} exact />
+                        <Redirect from="/" to="/books" exact/>
                         <Route path="/loans" component={Loans} />
                         <Route path="/books" component={Books} exact />
                         <Route path="/books/:bookId" component={BookInfo} exact />
@@ -42,6 +43,8 @@ class App extends Component {
                         <Route path="/categories" component={Categories} />
                         <Route path="/author/:authorId" component={Author} exact />
                         <Route path="/subscribe-user" component={SubscribeUser} />
+                        <Route path="/user-search" component={UserSearch} />
+                        <Route path="/users/:userId" component={UserInfo} />
                         <Route component={Error} />
                     </Switch>
                 </div>

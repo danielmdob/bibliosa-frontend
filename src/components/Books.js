@@ -13,6 +13,7 @@ class Books extends Component {
 
     title = "Título";
     author = "Autor";
+    callNumber = "Número de categorización";
 
     constructor(props) {
         super(props);
@@ -20,7 +21,7 @@ class Books extends Component {
         this.state = {
             typeaheadIsLoading: false,
             selectedSearchField: this.title,
-            searchFields: [this.title, this.author],
+            searchFields: [this.title, this.author, this.callNumber],
             searchOptions: [],
             redirectLink: '',
             newArrivals: [],
@@ -63,6 +64,14 @@ class Books extends Component {
                     newState.typeaheadIsLoading = false;
                     this.setState(newState);
                 });
+        } else if (this.state.selectedSearchField === this.callNumber) {
+            BookService.callNumberSearch(input)
+                .then(response => {
+                    let newState = Object.assign({}, this.state);
+                    newState.searchOptions = response;
+                    newState.typeaheadIsLoading = false;
+                    this.setState(newState);
+                });
         }
     }
 
@@ -99,9 +108,22 @@ class Books extends Component {
 
     renderTypeahead() {
         let labelKey;
+        let additionalProp;
         switch (this.state.selectedSearchField) {
             case this.title:
                 labelKey = "title";
+                break;
+
+            case this.callNumber:
+                labelKey = "call_number";
+                additionalProp = ((option) => (
+                    <div>
+                        {option.title}
+                        <div>
+                            <small>Número: {option.call_number}</small>
+                        </div>
+                    </div>
+                ));
                 break;
 
             case this.author:
@@ -113,7 +135,7 @@ class Books extends Component {
         return (
             <AsyncTypeahead
                 isLoading={this.state.typeaheadIsLoading}
-                minLength={3}
+                minLength={1}
                 onSearch={(input) => this.handleSearch(input)}
                 placeholder={this.state.selectedSearchField}
                 labelKey={labelKey}
@@ -121,6 +143,9 @@ class Books extends Component {
                 onChange={(selectedOption) => this.handleChange(selectedOption)}
                 useCache={false}
                 emptyLabel="No se obtuvieron resultados."
+                promptText="Escriba para buscar..."
+                searchText={"Buscando..."}
+                renderMenuItemChildren={additionalProp}
             />
         );
     }
@@ -137,7 +162,9 @@ class Books extends Component {
                 <Col sm={4} md={2} key={key}>
                     <LinkContainer to={"/books/" + newArrival.id}>
                         <div className="books-book-cover-div">
-                            <img className="books-book-cover" alt="Sin Portada" src={newArrival.cover} />
+                            <div className="books-cover-container">
+                                <img className="books-book-cover" alt="Sin Portada" src={newArrival.cover} />
+                            </div>
                             <h5 className="text-center books-book-title">{newArrival.title}</h5>
                         </div>
                     </LinkContainer>

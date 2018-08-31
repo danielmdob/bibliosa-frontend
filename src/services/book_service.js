@@ -7,6 +7,7 @@ class _BookService {
     deleteBookUrl = BASE_URL + 'delete_book';
     getBookInfoUrl = BASE_URL + 'get_book';
     titleSearchUrl = BASE_URL + 'title_search_book';
+    callNumberSearchUrl = BASE_URL + 'call_number_search_book';
     newArrivalsUrl = BASE_URL + 'new_arrivals';
 
     addBook(categoryId, title, authors, isbn10, isbn13, issn, callNumber, publisher, edition, year, copies, bookCoverUrl) {
@@ -39,6 +40,16 @@ class _BookService {
 
     titleSearch(searchString) {
         return axios.get(this.titleSearchUrl,
+            {
+                params: {
+                    search_string: searchString,
+                }
+            })
+            .then(response => response.data);
+    }
+
+    callNumberSearch(searchString) {
+        return axios.get(this.callNumberSearchUrl,
             {
                 params: {
                     search_string: searchString,

@@ -39,6 +39,9 @@ class Navigation extends Component {
                         </NavItem>
                     </LinkContainer>,
                     <NavDropdown key={1000} eventKey={4} title="Usuarios" id="basic-nav-dropdown" className="link">
+                        <LinkContainer to="/user-search">
+                            <MenuItem eventKey={4.1}>Buscar Usuario</MenuItem>
+                        </LinkContainer>
                         <LinkContainer to="/subscribe-user">
                             <MenuItem eventKey={4.1}>Inscribir Usuario</MenuItem>
                         </LinkContainer>
